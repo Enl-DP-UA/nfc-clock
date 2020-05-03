@@ -10,25 +10,21 @@
     <title>Document</title>
   </head>
   <body>
-    <canvas id="canvas"></canvas>
-    <button id="scan">Scan time</button>
-    <button id="send">Send time</button>
+    <time id="time"></time>
     <output id="output"></output>
     <script>
       (async () => {
         const $ = (id) => document.getElementById(id);
-        const canvas = $("canvas");
+        const time = $("time");
         const scanButton = $("scan");
         const sendButton = $("send");
         const output = $("output");
 
-        const ctx = canvas.getContext("2d");
-        setInterval(() => {
-          ctx.fillStyle = "white";
-          ctx.fillRect(0, 0, canvas.width, canvas.height);
-          ctx.fillStyle = "black";
-          ctx.fillText(new Date().toISOString(), 10, 10);
-        }, 16.666667);
+        const animateTime = () => {
+          time.innerHTML = new Date().toISOString();
+          requestAnimationFrame(animateTime);
+        };
+        animateTime();
 
         const log = (text) => (output.innerHTML = text);
 
