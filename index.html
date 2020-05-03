@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+    <button id="scan">Scan time</button>
+    <button id="send">Send time</button>
+    <output id="output"></output>
+    <script>
+      (async () => {
+        const $ = (id) => document.getElementById(id);
+        const canvas = $("canvas");
+        const scanButton = $("scan");
+        const sendButton = $("send");
+        const output = $("output");
+
+        const ctx = canvas.getContext("2d");
+        setInterval(() => {
+          ctx.fillStyle = "white";
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+          ctx.fillStyle = "black";
+          ctx.fillText(new Date().toISOString(), 10, 10);
+        }, 16.666667);
+
+        const log = (text) => (output.innerHTML = text);
+
+        scanButton.addEventListener("click", async () => {
+          try {
+            const reader = new NDEFReader();
+            await reader.scan();
+            log("Reading");
+
+            reader.addEventListener("error", () => {
+              log(`Error: ${error.message}`);
+            });
+
+            reader.addEventListener("reading", (event) => {
+              console.log(event);
+            });
+          } catch (error) {
+            log("Error: " + error);
+          }
+        });
+
+        sendButton.addEventListener("click", async () => {
+          log("Sending");
+
+          try {
+            const writer = new NDEFWriter();
+            await writer.write(`${+new Date()}`);
+            log("Done");
+          } catch (error) {
+            log("Error: " + error);
+          }
+        });
+      })();
+    </script>
+  </body>
+</html>
