@@ -36,7 +36,7 @@
             await reader.scan();
             log("Reading");
 
-            reader.addEventListener("error", () => {
+            reader.addEventListener("error", (error) => {
               log(`Error: ${error.message}`);
             });
 
